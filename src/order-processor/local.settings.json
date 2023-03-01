@@ -3,7 +3,7 @@
   "Values": {
     "AzureWebJobsStorage": "${AzureWebJobsStorage}",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-    "ordersHubConnection": "${ordersHubConnection}",
+    "ordersHubConnection": "${eventHubConnection}",
     "CosmosDBConnection": "${CosmosDBConnection}"
   }
 }

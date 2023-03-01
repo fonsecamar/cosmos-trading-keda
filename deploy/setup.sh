@@ -118,7 +118,7 @@ read -n 1
 blobKey=$(az storage account keys list -g $RESOURCE_GROUP -n blobdemo$SUFFIX --query [0].value -o tsv)
 AzureWebJobsStorage="DefaultEndpointsProtocol=https;AccountName=blobdemo$SUFFIX;AccountKey=$blobKey;EndpointSuffix=core.windows.net"
 CosmosDBConnection=$(az cosmosdb keys list -g $RESOURCE_GROUP -n cosmosdemo$SUFFIX --type connection-strings --query connectionStrings[0].connectionString -o tsv)
-ordersHubConnection=$(az eventhubs namespace authorization-rule keys list -g $RESOURCE_GROUP --namespace-name eventhubdemo$SUFFIX -n RootManageSharedAccessKey --query primaryConnectionString -o tsv)
+eventHubConnection=$(az eventhubs namespace authorization-rule keys list -g $RESOURCE_GROUP --namespace-name eventhubdemo$SUFFIX -n RootManageSharedAccessKey --query primaryConnectionString -o tsv)
 
 cd ./src/marketdata-generator/
 echo "Directory changed: '$(pwd)'"
