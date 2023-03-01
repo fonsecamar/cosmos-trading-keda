@@ -120,11 +120,30 @@ AzureWebJobsStorage="DefaultEndpointsProtocol=https;AccountName=blobdemo$SUFFIX;
 CosmosDBConnection=$(az cosmosdb keys list -g $RESOURCE_GROUP -n cosmosdemo$SUFFIX --type connection-strings --query connectionStrings[0].connectionString -o tsv)
 ordersHubConnection=$(az eventhubs namespace authorization-rule keys list -g $RESOURCE_GROUP --namespace-name eventhubdemo$SUFFIX -n RootManageSharedAccessKey --query primaryConnectionString -o tsv)
 
-cd ./src/order-manager/
+cd ./src/marketdata-generator/
 echo "Directory changed: '$(pwd)'"
 
 # File to modify
 FILE_TO_REPLACE=settings.json
+
+# Pattern for your tokens -- e.g. ${token}
+TOKEN_PATTERN='(?<=\$\{)\w+(?=\})'
+
+# Find all tokens to replace
+TOKENS=$(grep -oP ${TOKEN_PATTERN} ${FILE_TO_REPLACE} | sort -u)
+
+# Loop over tokens and use sed to replace
+for token in $TOKENS
+do
+  echo "Replacing \${${token}} with ${!token}"
+  sed -i "s|\${${token}}|${!token}|" ${FILE_TO_REPLACE}
+done
+
+cd ../order-manager/
+echo "Directory changed: '$(pwd)'"
+
+# File to modify
+FILE_TO_REPLACE=local.settings.json
 
 # Pattern for your tokens -- e.g. ${token}
 TOKEN_PATTERN='(?<=\$\{)\w+(?=\})'
@@ -151,7 +170,7 @@ cd ../order-processor/
 echo "Directory changed: '$(pwd)'"
 
 # File to modify
-FILE_TO_REPLACE=settings.json
+FILE_TO_REPLACE=local.settings.json
 
 # Pattern for your tokens -- e.g. ${token}
 TOKEN_PATTERN='(?<=\$\{)\w+(?=\})'
