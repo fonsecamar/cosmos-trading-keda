@@ -120,7 +120,7 @@ resource eh 'Microsoft.EventHub/namespaces@2022-10-01-preview' existing = {
   name: marketdataInputEventHubNamespaceName
 }
 
-resource roleAssignmentEh 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+resource roleAssignmentEh 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(eh.id, 'ASAReader')
   scope: eh
   properties: {

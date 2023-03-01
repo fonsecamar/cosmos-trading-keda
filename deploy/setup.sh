@@ -2,13 +2,13 @@ SUBSCRIPTION_ID=$1
 RESOURCE_GROUP=$2
 LOCATION=$3
 SUFFIX=$4
-TENANT_ID=$5
+#TENANT_ID=$5
 
 echo 'Subscription Id     :' $SUBSCRIPTION_ID
 echo 'Resource Group      :' $RESOURCE_GROUP
 echo 'Location            :' $LOCATION
 echo 'Deploy Suffix       :' $SUFFIX
-echo 'Tenant Id (optional):' $TENANT_ID
+#echo 'Tenant Id (optional):' $TENANT_ID
 
 echo 'Validate variables abova and press any key to continue setup...'
 read -n 1
@@ -17,18 +17,18 @@ read -n 1
 cd ../infrastructure
 echo "Directory changed: '$(pwd)'"
 
-if [ -z "$TENANT_ID" ] 
-then
-    LOGIN=$(az login)
-else
-    LOGIN=$(az login --tenant $TENANT_ID)
-fi
+#if [ -z "$TENANT_ID" ] 
+#then
+#    LOGIN=$(az login)
+#else
+#    LOGIN=$(az login --tenant $TENANT_ID)
+#fi
 
-if [[ -z "$LOGIN" ]] 
-then
-    echo 'Login failed! Exiting...'
-    exit
-fi
+#if [[ -z "$LOGIN" ]] 
+#then
+#    echo 'Login failed! Exiting...'
+#    exit
+#fi
 
 az account set --subscription $SUBSCRIPTION_ID
 az account show
