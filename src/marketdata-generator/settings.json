@@ -1,0 +1,4 @@
+{
+  "eventHubConnection": "Endpoint=sb://<your event hub name>.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=<your event hub key>",
+  "eventHubTopic": "marketdata"
+}
