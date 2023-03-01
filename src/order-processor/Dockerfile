@@ -4,13 +4,13 @@ FROM mcr.microsoft.com/azure-functions/dotnet:4 AS base
 WORKDIR /home/site/wwwroot
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/order-processor/order-processor.csproj", "src/order-processor/"]
-COPY ["src/trading-model/trading-model.csproj", "src/trading-model/"]
-RUN dotnet restore "src/order-processor/order-processor.csproj"
+COPY ["order-processor/order-processor.csproj", "order-processor/"]
+COPY ["trading-model/trading-model.csproj", "trading-model/"]
+RUN dotnet restore "order-processor/order-processor.csproj"
 COPY . .
-WORKDIR "/src/src/order-processor"
+WORKDIR "/src/order-processor"
 RUN dotnet build "order-processor.csproj" -c Release -o /app/build
 
 FROM build AS publish

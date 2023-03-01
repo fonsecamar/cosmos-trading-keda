@@ -2,13 +2,11 @@ SUBSCRIPTION_ID=$1
 RESOURCE_GROUP=$2
 LOCATION=$3
 SUFFIX=$4
-#TENANT_ID=$5
 
 echo 'Subscription Id     :' $SUBSCRIPTION_ID
 echo 'Resource Group      :' $RESOURCE_GROUP
 echo 'Location            :' $LOCATION
 echo 'Deploy Suffix       :' $SUFFIX
-#echo 'Tenant Id (optional):' $TENANT_ID
 
 echo 'Validate variables abova and press any key to continue setup...'
 read -n 1
@@ -16,19 +14,6 @@ read -n 1
 #Start infrastructure deployment
 cd ../infrastructure
 echo "Directory changed: '$(pwd)'"
-
-#if [ -z "$TENANT_ID" ] 
-#then
-#    LOGIN=$(az login)
-#else
-#    LOGIN=$(az login --tenant $TENANT_ID)
-#fi
-
-#if [[ -z "$LOGIN" ]] 
-#then
-#    echo 'Login failed! Exiting...'
-#    exit
-#fi
 
 az account set --subscription $SUBSCRIPTION_ID
 az account show
@@ -75,11 +60,8 @@ read -n 1
 cd ..
 echo "Directory changed: '$(pwd)'"
 
-docker build -f ./src/order-manager/Dockerfile -t acrdemo$SUFFIX.azurecr.io/ordermanager .
-docker build -f ./src/order-processor/Dockerfile -t acrdemo$SUFFIX.azurecr.io/orderprocessor .
-
-docker push acrdemo$SUFFIX.azurecr.io/ordermanager:latest
-docker push acrdemo$SUFFIX.azurecr.io/orderprocessor:latest
+az acr build --registry acrdemo$SUFFIX --image orderprocessor:latest --file ./order-processor/Dockerfile .
+az acr build --registry acrdemo$SUFFIX --image orderprocessor:latest --file ./order-processor/Dockerfile .
 
 echo 'Press any key to continue setup...'
 read -n 1
