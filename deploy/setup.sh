@@ -8,7 +8,7 @@ echo 'Resource Group      :' $RESOURCE_GROUP
 echo 'Location            :' $LOCATION
 echo 'Deploy Suffix       :' $SUFFIX
 
-echo 'Validate variables abova and press any key to continue setup...'
+echo 'Validate variables above and press any key to continue setup...'
 read -n 1
 
 #Start infrastructure deployment
@@ -50,36 +50,33 @@ fi
 echo 'Press any key to continue setup...'
 read -n 1
 
-az aks get-credentials --resource-group $RESOURCE_GROUP --name aksdemo$SUFFIX
-
-az acr login -n acrdemo$SUFFIX
-
-echo 'Press any key to continue setup...'
-read -n 1
-
-cd ..
+cd ../src
 echo "Directory changed: '$(pwd)'"
 
-az acr build --registry acrdemo$SUFFIX --image orderprocessor:latest --file ./order-processor/Dockerfile .
-az acr build --registry acrdemo$SUFFIX --image orderprocessor:latest --file ./order-processor/Dockerfile .
+az acr login --name acrdemo$SUFFIX
+
+docker build -f ./order-manager/Dockerfile -t acrdemo$SUFFIX.azurecr.io/ordermanager .
+docker build -f ./order-processor/Dockerfile -t acrdemo$SUFFIX.azurecr.io/orderprocessor .
+
+docker push acrdemo$SUFFIX.azurecr.io/ordermanager:latest
+docker push acrdemo$SUFFIX.azurecr.io/orderprocessor:latest
+
+#az acr build --registry acrdemo$SUFFIX --image orderprocessor:latest --file ./order-processor/Dockerfile .
+#az acr build --registry acrdemo$SUFFIX --image orderprocessor:latest --file ./order-processor/Dockerfile .
 
 echo 'Press any key to continue setup...'
 read -n 1
 
-helm repo add kedacore https://kedacore.github.io/charts
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-
-echo 'Press any key to continue setup...'
-read -n 1
+az aks get-credentials --resource-group $RESOURCE_GROUP --name aksdemo$SUFFIX
 
 kubectl create namespace keda
 kubectl create namespace ordermanager
 kubectl create namespace orderprocessor
 kubectl create namespace ingress-nginx
 
-echo 'Press any key to continue setup...'
-read -n 1
+helm repo add kedacore https://kedacore.github.io/charts
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
 
 helm upgrade keda kedacore/keda --install --namespace keda
 helm upgrade ingress-nginx ingress-nginx/ingress-nginx \
@@ -102,7 +99,7 @@ AzureWebJobsStorage="DefaultEndpointsProtocol=https;AccountName=blobdemo$SUFFIX;
 CosmosDBConnection=$(az cosmosdb keys list -g $RESOURCE_GROUP -n cosmosdemo$SUFFIX --type connection-strings --query connectionStrings[0].connectionString -o tsv)
 eventHubConnection=$(az eventhubs namespace authorization-rule keys list -g $RESOURCE_GROUP --namespace-name eventhubdemo$SUFFIX -n RootManageSharedAccessKey --query primaryConnectionString -o tsv)
 
-cd ./src/marketdata-generator/
+cd ./marketdata-generator/
 echo "Directory changed: '$(pwd)'"
 
 # File to modify
@@ -182,11 +179,15 @@ kubectl apply -f ./deploy-ingress-prometheus.yaml
 kubectl apply -f ./scaled-object.yaml
 kubectl apply -f ./deploy-ingress-api.yaml
 
+echo ""
+echo "***************************************************"
+echo "*************  Deploy completed!  *****************"
+echo ""
 echo "Use the URI below for your API calls"
-echo ingressdemo$SUFFIX.$LOCATION.cloudapp.azure.com
-
-echo "Start Stream Analytics job"
-echo "Start marketdata-generator"
-
-
-echo "Deploy completed!"
+echo "URI: ==> ingressdemo$SUFFIX.$LOCATION.cloudapp.azure.com" 
+echo ""
+echo "Next steps:"
+echo "1. Start Stream Analytics job"
+echo "2. Run marketdata-generator"
+echo "3. Call APIs"
+echo "***************************************************"
