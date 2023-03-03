@@ -27,6 +27,11 @@ var containers = [
     partitionKeys: ['/customerId', '/assetClass']
     enableIndex: true
   }
+  {
+    name: 'leases'
+    partitionKeys: ['/id' ]
+    enableIndex: true
+  }
 ]
 
 var locations = [
@@ -56,6 +61,11 @@ resource database 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-05-15
   parent: account
   name: databaseName
   properties: {
+    options: {
+      autoscaleSettings: {
+        maxThroughput: autoscaleMaxThroughput
+      }
+    }
     resource: {
       id: databaseName
     }
@@ -76,11 +86,6 @@ resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/container
       indexingPolicy: {
         automatic: config.enableIndex
         indexingMode: config.enableIndex ? 'consistent' : 'none'
-      }
-    }
-    options: {
-      autoscaleSettings: {
-        maxThroughput: autoscaleMaxThroughput
       }
     }
   }

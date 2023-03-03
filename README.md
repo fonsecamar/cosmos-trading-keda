@@ -52,7 +52,7 @@ This repository provides a code sample in .NET on how to use some Azure Cosmos D
 > Resources created:
 > - 2 resource groups
 > - Azure Blob Storage (ADLS Gen2)
-> - Azure Cosmos DB account (4 collections with 1000 RUs autoscale each + 1 lease collection with 400 RUs manual)
+> - Azure Cosmos DB account (1 database with 1000 RUs autoscale shared with 5 collections)
 > - Azure Event Hub standard
 > - Azure Steam Analytics job
 > - Azure Container Registry basic

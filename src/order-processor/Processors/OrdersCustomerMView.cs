@@ -31,7 +31,7 @@ namespace order_executor.Processors
                 LeaseContainerPrefix = "customer-portfolio-",
                 FeedPollDelay = 5000,
                 MaxItemsPerInvocation = 100,
-                CreateLeaseContainerIfNotExists = true)]IReadOnlyList<Order> input,
+                CreateLeaseContainerIfNotExists = false)]IReadOnlyList<Order> input,
             ILogger log)
         {
             await Parallel.ForEachAsync(input, async (order, token) =>
