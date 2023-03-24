@@ -38,12 +38,13 @@ This repository provides a code sample in .NET on how to use some Azure Cosmos D
     ```
 
 * Run setup.sh with the appropriete parameters. Keep the API's URIs prompted when completed.
+> Provide a non-existent resource group name. Setup will provision.
 
     ```bash
     #SAMPLE
     #./setup.sh 00000000-0000-0000-0000-000000000000 rg-my-demo SouthCentralUS myrandomsuffix
 
-    ./setup.sh <subscription id> <resource grouop> <location> <resources suffix>
+    ./setup.sh <subscription id> <resource group> <location> <resources suffix>
     ```
 > Setup has some pause stages. Hit enter to continue when prompted. 
 > 
@@ -117,6 +118,13 @@ This repository provides a code sample in .NET on how to use some Azure Cosmos D
     -- Returns Customer Portfolio by customerId
     curl --request GET "http://ingressdemo$SUFFIX.$LOCATION.cloudapp.azure.com/api/customerPortfolio/{customerId}"
     ```
+
+<br/>
+
+# Clean Up
+
+1. `CTRL + C` to stop marketdata generator
+2. Delete the Resource Group to destroy all resources
 
 <br/>
 
